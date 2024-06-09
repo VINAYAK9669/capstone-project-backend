@@ -1,4 +1,4 @@
-const mangoose = require("mongoose");
+const mongoose = require("mongoose");
 
 // name, email, password
 const userSchema = new mongoose.Schema({
@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  password: {
+    type: String,
+    required: true,
+  },
 });
 
-module.export = mangoose.model("user", userSchema);
+module.exports = mongoose.model("User", userSchema);

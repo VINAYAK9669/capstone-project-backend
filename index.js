@@ -16,11 +16,13 @@ mongoose
     console.log("Failed to connect to MagoDb");
   });
 
+app.use("/user", userRoute);
+
 // localhost:3000/health
 app.get("/health", (req, res) => {
   res.json({
     message: "Job listing API is working fine",
-    status: working,
+    status: "working",
     date: new Date().toLocaleDateString(),
   });
 });

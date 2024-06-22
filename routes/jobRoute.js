@@ -48,42 +48,10 @@ router.post("/add", validateNewJobs, async (req, res, next) => {
     next(error); // Pass the error to the error handler
   }
 });
-
-// Route for fetching all jobs
-router.get("/", getFilteredJobs);
-
-// Route for fetching a job by ID
-router.get("/:id", async (req, res, next) => {
-  try {
-    const jobId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(jobId)) {
-      return res.status(400).json({ message: "Invalid job ID" });
-    }
-    const job = await Job.findById(jobId);
-
-    if (job) {
-      res.status(200).json({
-        message: "Job Found",
-        job: job,
-      });
-    } else {
-      res.status(404).json({
-        message: "Job not found",
-      });
-    }
-  } catch (error) {
-    next(error); // Pass the error to the error handler
-  }
-});
-
-// Error handling middleware should be the last middleware
-router.use(errorHandler);
-
 const getFilteredJobs = async (req, res, next) => {
   try {
     const { minSalary, maxSalary, jobType, location, remote, skills } =
       req.query;
-    console.log(minSalary, maxSalary, jobType, location);
 
     // Parse the skills query parameter into an array
     let skillsArray = skills
@@ -110,5 +78,41 @@ const getFilteredJobs = async (req, res, next) => {
     next(error); // Pass the error to the error handler
   }
 };
+
+// Route for fetching all jobs
+router.get("/", getFilteredJobs);
+
+// Route for fetching a job by ID
+router.get("/:id", async (req, res, next) => {
+  try {
+    const jobId = req.params.id;
+
+    // Check if the provided job ID is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(400).json({ message: "Invalid job ID" });
+    }
+
+    // Fetch the job by ID
+    const job = await Job.findById(jobId);
+
+    // Check if the job was found
+    if (job) {
+      return res.status(200).json({
+        message: "Job Found",
+        job: job,
+      });
+    } else {
+      return res.status(404).json({
+        message: "Job not found",
+      });
+    }
+  } catch (error) {
+    // Pass any errors to the error handling middleware
+    next(error);
+  }
+});
+
+// Error handling middleware should be the last middleware
+router.use(errorHandler);
 
 module.exports = router;

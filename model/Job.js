@@ -49,6 +49,9 @@ const jobSchema = new mongoose.Schema(
     additionalInformation: {
       type: String,
     },
+    refUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields

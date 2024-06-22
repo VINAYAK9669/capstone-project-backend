@@ -12,36 +12,94 @@ const validateNewJobs = (req, res, next) => {
     skillsRequired,
   } = req.body;
 
+  const refUserId = req.refUserId;
+  console.log(refUserId);
+
   // Check if all required fields are present
-  if (
-    !companyName ||
-    !logoURL ||
-    !jobTitle ||
-    !monthlySalary ||
-    !jobType ||
-    typeof remote !== "boolean" ||
-    !location ||
-    !jobDescription ||
-    !aboutCompany ||
-    !skillsRequired
-  ) {
+  if (!companyName) {
     return res.status(400).json({
-      message: "Please provide all required fields",
+      message: "Company name is required",
+    });
+  }
+
+  if (!logoURL) {
+    return res.status(400).json({
+      message: "Logo URL is required",
+    });
+  }
+
+  if (!jobTitle) {
+    return res.status(400).json({
+      message: "Job title is required",
+    });
+  }
+
+  if (!monthlySalary) {
+    return res.status(400).json({
+      message: "Monthly salary is required",
+    });
+  }
+
+  if (!jobType) {
+    return res.status(400).json({
+      message: "Job type is required",
+    });
+  }
+
+  if (typeof remote !== "boolean") {
+    return res.status(400).json({
+      message: "Remote must be a boolean value",
+    });
+  }
+
+  if (!location) {
+    return res.status(400).json({
+      message: "Location is required",
+    });
+  }
+
+  if (!jobDescription) {
+    return res.status(400).json({
+      message: "Job description is required",
+    });
+  }
+
+  if (!aboutCompany) {
+    return res.status(400).json({
+      message: "About company is required",
+    });
+  }
+
+  if (!skillsRequired) {
+    return res.status(400).json({
+      message: "Skills required is required",
     });
   }
 
   // Validate the job position
   const validJobPositions = ["Full-Time", "Part-Time", "Internship"];
-  const isValidJobType = validJobPositions.includes(jobType);
+  if (!validJobPositions.includes(jobType)) {
+    return res.status(400).json({
+      message: "Job type must be one of Full-Time, Part-Time, or Internship",
+    });
+  }
 
   // Validate the skillsRequired array
-  const isValidSkills =
-    Array.isArray(skillsRequired) &&
-    skillsRequired.every((skill) => typeof skill === "string");
+  if (
+    !Array.isArray(skillsRequired) ||
+    !skillsRequired.every((skill) => typeof skill === "string")
+  ) {
+    return res.status(400).json({
+      message: "Skills required must be an array of strings",
+    });
+  }
 
   // Validate the monthly salary
-  const isValidMonthlySalary =
-    typeof monthlySalary === "number" && monthlySalary > 0;
+  if (typeof monthlySalary !== "number" || monthlySalary <= 0) {
+    return res.status(400).json({
+      message: "Monthly salary must be a positive number",
+    });
+  }
 
   // Validate the logo URL
   const image_url_pattern = new RegExp(
@@ -55,17 +113,15 @@ const validateNewJobs = (req, res, next) => {
     return image_url_pattern.test(url);
   }
 
-  const validLogoUrl = isValidImageUrl(logoURL);
-
-  // If any validation fails, return a 400 error
-  if (
-    !isValidSkills ||
-    !isValidMonthlySalary ||
-    !isValidJobType ||
-    !validLogoUrl
-  ) {
+  if (!isValidImageUrl(logoURL)) {
     return res.status(400).json({
-      message: "Please validate all the required field",
+      message: "Logo URL must be a valid URL",
+    });
+  }
+  if (!refUserId) {
+    console.log(refUserId);
+    return res.status(400).json({
+      message: "Error creating a userId",
     });
   }
 

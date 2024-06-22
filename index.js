@@ -22,7 +22,11 @@ mongoose
   });
 
 app.use("/user", userRoute);
-app.use("/job", verifyToken, jobRoute);
+app.use(
+  "/job",
+  // verifyToken,
+  jobRoute
+);
 app.use(errorHandler); // Error handler should be used after all routes
 
 // localhost:3000/health

@@ -9,7 +9,7 @@ const verifyToken = (req, res, next) => {
       });
     }
     const decoded = jwt.verify(token, "secret");
-    req.user = decoded;
+    req.refUserId = decoded.userID;
     console.log(decoded);
     next();
   } catch (error) {
